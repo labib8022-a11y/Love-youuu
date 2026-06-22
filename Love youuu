@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Portal</title>
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9fb;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #eaeaea;
+            transition: all 0.3s ease;
+        }
+
+        /* Utility classes for screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease forward;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & Elements */
+        .badge {
+            display: inline-block;
+            background: #f0f0f3;
+            color: #666;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #111;
+        }
+
+        p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .subtext {
+            font-size: 13px;
+            color: #888;
+            margin-top: 25px;
+        }
+
+        /* Inputs & Buttons */
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input:focus {
+            border-color: #0070f3;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #333;
+        }
+
+        /* Question Screen Specifics */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+            height: 50px;
+        }
+
+        .btn-group button {
+            width: 120px;
+            position: absolute;
+        }
+
+        #btn-yes {
+            left: calc(50% - 135px);
+            background: #ff477e;
+        }
+
+        #btn-yes:hover {
+            background: #ff2a65;
+        }
+
+        #btn-no {
+            right: calc(50% - 135px);
+            background: #f0f0f3;
+            color: #333;
+            transition: all 0.1s ease;
+        }
+
+        /* Success Screen Specifics */
+        .heart-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            to { transform: scale(1.15); }
+        }
+
+        .pink-text {
+            color: #ff477e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        
+        <div id="screen-access" class="screen active">
+            <span class="badge">Internal tool</span>
+            <h2>Portal Access</h2>
+            <p>This thing is created by Labib.</p>
+            
+            <div class="input-group">
+                <label for="access-code">Access code</label>
+                <input type="password" id="access-code" placeholder="Enter code here...">
+            </div>
+            
+            <button onclick="checkCode()">Continue</button>
+            <p class="subtext">v1.0 · built for one person only</p>
+        </div>
+
+        <div id="screen-question" class="screen">
+            <span class="badge" style="background: #ffe3ec; color: #ff477e;">One question, Nowrin</span>
+            <h2>Do you love me?🥺</h2>
+            
+            <div class="btn-group">
+                <button id="btn-yes" onclick="goToSuccess()">Yes</button>
+                <button id="btn-no" onmouseover="moveNoButton()" onclick="moveNoButton()">No</button>
+            </div>
+        </div>
+
+        <div id="screen-success" class="screen">
+            <div class="heart-icon">💗</div>
+            <h2>Aww, Love you too <span class="pink-text">~jaan😘</span></h2>
+            <p class="subtext" style="margin-bottom: 0; font-style: italic;">there was only ever one right answer 🌸</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Set your secret access code here (e.g., "love", "1234", "nowrin")
+        const SECRET_CODE = "love"; 
+
+        function checkCode() {
+            const inputCode = document.getElementById('access-code').value;
+            
+            // You can either enforce a specific code, or remove the condition 
+            // if you want ANY text entered to allow entry.
+            if (inputCode.trim().toLowerCase() === SECRET_CODE) {
+                switchScreen('screen-access', 'screen-question');
+            } else {
+                alert("Incorrect access code. Hint: Try 'love'!");
+            }
+        }
+
+        function goToSuccess() {
+            switchScreen('screen-question', 'screen-success');
+        }
+
+        function switchScreen(hideId, showId) {
+            document.getElementById(hideId).classList.remove('active');
+            document.getElementById(showId).classList.add('active');
+        }
+
+        // Fun script to make the "No" button run away!
+        function moveNoButton() {
+            const noBtn = document.getElementById('btn-no');
+            
+            // Generate safe random positions within the browser viewport bounds
+            const padding = 100;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            
+            // Get random X and Y coordinates
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            
+            // Apply fixed positioning so it can float anywhere on screen
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+    </script>
+</body>
+</html>
